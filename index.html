@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>《周易》时间哲学研究 | A Study on the Time Philosophy of Zhouyi</title>
+    
+    <!-- 引入Google Fonts: Noto Serif SC (衬线) 和 Noto Sans SC (无衬线) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #F9F7F2; /* 柔和米色/纸张色 */
+            --text-main: #1A1A1A; /* 深炭灰 */
+            --text-light: #555555;
+            --accent-gold: #C5A065; /* 诺贝尔奖牌金 */
+            --border-color: #E0DDD5;
+            --font-serif: 'Noto Serif SC', 'Playfair Display', serif;
+            --font-sans: 'Noto Sans SC', sans-serif;
+            --spacing-unit: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.8;
+            font-weight: 300;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- 布局工具 --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        /* --- 排版样式 --- */
+        h1, h2, h3, h4 {
+            font-family: var(--font-serif);
+            color: var(--text-main);
+        }
+
+        .chapter-label {
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            margin-bottom: 16px;
+            display: block;
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 8px;
+            width: fit-content;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 400;
+            border-left: 2px solid var(--accent-gold);
+            padding-left: 16px;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* --- 导航 --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(249, 247, 242, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            margin-left: 32px;
+            font-size: 0.9rem;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards 0.5s;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--accent-gold);
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards 0.8s;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 60px;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--text-main), transparent);
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 1.5s;
+        }
+
+        /* --- 章节通用动画 --- */
+        section {
+            padding: var(--spacing-unit) 0;
+            border-top: 1px solid var(--border-color);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 第二章：时间轴设计 --- */
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3px;
+            top: 10px;
+            width: 5px;
+            height: 5px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        .concept-card {
+            background: #fff;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        /* --- 第三章：Canvas背景 --- */
+        #chapter3 {
+            position: relative;
+            background: #111; /* 深色背景突出数据感 */
+            color: #eee;
+            border: none;
+        }
+
+        #chapter3 .chapter-label {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+        }
+
+        #chapter3 h2, #chapter3 h3, #chapter3 p, #chapter3 li {
+            color: #eee;
+        }
+        
+        #chapter3 p, #chapter3 li {
+            color: #aaa;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* --- 第四章：引用块 --- */
+        .quote-box {
+            border-left: 4px solid var(--accent-gold);
+            padding: 20px 40px;
+            background: rgba(197, 160, 101, 0.05);
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            margin: 40px 0;
+            font-style: italic;
+        }
+
+        /* --- 第五章：对话网格 --- */
+        .dialogue-card {
+            text-align: center;
+            padding: 20px;
+            border: 1px solid transparent;
+            transition: border-color 0.3s;
+        }
+        
+        .dialogue-card:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .dialogue-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        
+        .dialogue-icon {
+            font-size: 2rem;
+            color: var(--accent-gold);
+            margin-bottom: 10px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* --- 动画关键帧 --- */
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            to { opacity: 0.6; }
+        }
+
+        /* --- 响应式 --- */
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            #canvas-container { width: 100%; opacity: 0.1; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo">ZHOUYI · TIME</div>
+        <div class="nav-links">
+            <a href="#chapter2">世界</a>
+            <a href="#chapter3">卦序</a>
+            <a href="#chapter4">当下</a>
+            <a href="#chapter5">对话</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <span class="chapter-label" style="border:none; margin: 0 auto; display:block;">Academic Research</span>
+            <h1>《周易》时间哲学研究<br><span style="font-size: 0.5em; font-weight:300; display:block; margin-top:10px;">A Study on the Time Philosophy of Zhouyi</span></h1>
+            <p>从历时性到当下的感通</p>
+            <div class="scroll-indicator"></div>
+        </div>
+    </header>
+
+    <!-- 第二章 -->
+    <section id="chapter2">
+        <div class="container">
+            <span class="chapter-label">Chapter 02</span>
+            <h2>《周易》古经里有一个鲜活的世界</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>第一节 三个时间概念撑起一方天地</h3>
+                    <p>历时性、暂时性、瞬时跨越性。</p>
+                    
+                    <div class="timeline-item">
+                        <strong>动态意象</strong><br>
+                        乾卦龙在田、潜渊、在天，需卦走走停停的行人，渐卦鸿雁在水边、岸上、林中。
+                    </div>
+                    <div class="timeline-item">
+                        <strong>有始有终</strong><br>
+                        天象、物象、人喻情境无一恒久，如密云不雨、人嬉笑哭号、公羊顶撞篱笆，皆有结束之时。
+                    </div>
+                    <div class="timeline-item">
+                        <strong>预判与行动</strong><br>
+                        身处现在，但却对尚未触及的未来下判断，并基于预判干涉未来的走向。
+                    </div>
+                </div>
+
+                <div>
+                    <h3>第二节 用本体诠释法拆分象与意</h3>
+                    <div class="concept-card" style="margin-bottom: 20px;">
+                        <h4 style="color: var(--accent-gold); margin-bottom:10px;">象 (Image)</h4>
+                        <ul>
+                            <li>• 六爻作为发展阶段</li>
+                            <li>• 天象、气象与自然物象的流变</li>
+                            <li>• 人喻、物喻与动态情境</li>
+                            <li>• 历史与礼仪的生成</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h4 style="color: var(--accent-gold); margin-bottom:10px;">意 (Meaning)</h4>
+                        <ul>
+                            <li>• 规律认知与总结</li>
+                            <li>• 对未知的预测与判断</li>
+                            <li>• 以行动创造未来</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 60px;">
+                <h3>第三节 易与不易的含义</h3>
+                <div class="grid-2">
+                    <p>
+                        <strong>不易的第一层含义是暂时稳定</strong>（包括客形与客感）。卦中一爻是稳定的，但其在六爻之间就是变化的一环。六十四卦中的一卦是稳定的，但其在六十四卦之间也是变化的一环。<br>
+                        <span style="color: var(--accent-gold);">→ 这一层易的含义是初爻到上爻，上一卦到下一卦之间的流转。</span>
+                    </p>
+                    <p>
+                        <strong>不易的第二层含义是规律的恒定</strong>。规律不随环境变化，其有时隐于幕后，但不消失，会在合适的时机被激活。<br>
+                        <span style="color: var(--accent-gold);">→ 这一层易的含义是规律作用场景的灵活变化。如乾卦规律可作用于蒙卦场景。</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第三章：深色背景 + Canvas 动画 -->
+    <section id="chapter3">
+        <canvas id="canvas-container"></canvas>
+        <div class="container" style="position: relative; z-index: 2;">
+            <span class="chapter-label">Chapter 03</span>
+            <h2>作为开放系统的卦序</h2>
+            <p>卦的排列方式可以有很多种，《序卦》只是人所选定的其中之一。</p>
+
+            <div class="grid-2">
+                <article>
+                    <h3>第一节 现有卦序解读</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 20px; border-left: 1px solid #555; padding-left: 15px;">
+                            <strong style="color:#eee">沈有鼎</strong><br>
+                            分出主卦与从卦，认为从卦卦序依从主卦的建构。主卦包括：乾坤泰否坎离既济未济震艮巽兑咸恒损益。
+                        </li>
+                        <li style="margin-bottom: 20px; border-left: 1px solid #555; padding-left: 15px;">
+                            <strong style="color:#eee">李尚信</strong><br>
+                            提出许多建构原则，包括非覆即变、主卦统领从卦、阴阳平衡与交通互补、变通配四时、“叁伍”“错综”、互卦用中。
+                        </li>
+                        <li style="margin-bottom: 20px; border-left: 1px solid var(--accent-gold); padding-left: 15px;">
+                            <strong style="color:var(--accent-gold)">孙利</strong><br>
+                            用一系列运算持续迭代一个八阶幻方，推得《序卦》卦序、《杂卦》卦序以及帛书卦序。
+                        </li>
+                    </ul>
+                </article>
+
+                <article>
+                    <h3>第二节 《易传》有多种卦序表达</h3>
+                    <p>卦序是开放多样的。</p>
+                    <ul>
+                        <li><strong>说卦</strong>：表达天时流转与人事循环。</li>
+                        <li><strong>系辞</strong>：取卦类万物之情。</li>
+                        <li><strong>序卦</strong>：其内部有原始反终的循环。</li>
+                        <li><strong>杂卦</strong>：表达盛衰交替。</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div style="margin-top: 60px; background: rgba(255,255,255,0.05); padding: 30px; border: 1px solid #333;">
+                <h3>第三节 提出一种新卦序</h3>
+                <p>上经一致，下经从既济卦到咸卦。</p>
+                <div class="grid-2">
+                    <div>
+                        <ul>
+                            <li>• 符合幻方迭代出的卦序。</li>
+                            <li>• 将既济卦、未济卦连接离卦坎卦。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li>• <strong>咸卦为最后一卦</strong>：
+                                <br>1. 与万民万物感通：民胞物与、仁者与万物同体。
+                                <br>2. 在时间中感通：所有当下之间互相感通。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第四章 -->
+    <section id="chapter4">
+        <div class="container">
+            <span class="chapter-label">Chapter 04</span>
+            <h2>《周易》的“当下”时间哲学</h2>
+            
+            <div class="grid-2">
+                <div>
+                    <h3>第一节 麦克塔格特的时间理论</h3>
+                    <p>一、麦克塔格特对A系列的反驳<br>
+                    二、麦克塔格特对B系列的反驳<br>
+                    三、现在论与永恒论</p>
+                </div>
+                <div>
+                    <h3>第二节 启发自《周易》的现在论</h3>
+                    <p>一、人对“此刻”有恒定感知<br>
+                    二、所有当下同时发生<br>
+                    三、存在对全部当下的感通</p>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                “所有当下之间互相感通……理解在特定时间窗口才能开启。”
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <h3>第三节 《周易》是一本写给当下的书</h3>
+                    <ul>
+                        <li>一、《蹇卦》事例</li>
+                        <li>二、理解在特定时间窗口才能开启</li>
+                        <li>三、切问近思的时间向度</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3>第四节 何为君子失时？</h3>
+                    <ul>
+                        <li>一、理论无法解释自身的兴衰</li>
+                        <li>二、《周易》时间哲学的作用边界</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第五章 -->
+    <section id="chapter5">
+        <div class="container">
+            <span class="chapter-label">Chapter 05</span>
+            <h2>《周易》时间哲学与不同传统的对话</h2>
+            <p style="text-align: center; max-width: 600px; margin: 0 auto 40px auto;">
+                跨越时空的哲学共鸣，在不同文明的智慧中寻找“变易”与“永恒”的交汇点。
+            </p>
+
+            <div class="grid-4">
+                <div class="dialogue-card">
+                    <div class="dialogue-icon">I</div>
+                    <h4>巴门尼德</h4>
+                    <p style="font-size: 0.9rem; text-align: center;">Parmenides</p>
+                </div>
+                <div class="dialogue-card">
+                    <div class="dialogue-icon">II</div>
+                    <h4>奥古斯丁</h4>
+                    <p style="font-size: 0.9rem; text-align: center;">Augustine</p>
+                </div>
+                <div class="dialogue-card">
+                    <div class="dialogue-icon">III</div>
+                    <h4>佛陀</h4>
+                    <p style="font-size: 0.9rem; text-align: center;">Buddha</p>
+                </div>
+                <div class="dialogue-card">
+                    <div class="dialogue-icon">IV</div>
+                    <h4>爱因斯坦</h4>
+                    <p style="font-size: 0.9rem; text-align: center;">Einstein</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>基于《周易》古经研究内容制作</p>
+            <p style="font-family: var(--font-serif); color: var(--accent-gold);">“原始反终，故知死生之说。”</p>
+        </div>
+    </footer>
+
+    <script>
+        // 1. 滚动动画逻辑 (Intersection Observer)
+        document.addEventListener("DOMContentLoaded", function() {
+            const sections = document.querySelectorAll("section");
+            
+            const observerOptions = {
+                threshold: 0.15, // 当15%可见时触发
+                rootMargin: "0px"
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add("visible");
+                    // 仅触发一次
+                    // observer.unobserve(entry.target); 
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+
+        // 2. 第三章 Canvas 动画：模拟“幻方迭代”与“卦序网络”
+        const canvas = document.getElementById('canvas-container');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        function resize() {
+            width = canvas.width = canvas.offsetWidth;
+            height = canvas.height = canvas.offsetHeight;
+        }
+
+        // 初始化粒子
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2 + 1;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 边界反弹
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+
+            draw() {
+                ctx.fillStyle = 'rgba(197, 160, 101, 0.5)'; // 金色半透明
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            // 创建64个粒子代表64卦
+            for (let i = 0; i < 64; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // 绘制连线 (模拟卦序联系)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 1;
+            
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+                p.update();
+                p.draw();
+
+                // 简单的距离连线，模拟“感通”
+                for (let j = i + 1; j < particles.length; j++) {
+                    let p2 = particles[j];
+                    let dx = p.x - p2.x;
+                    let dy = p.y - p2.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        initParticles();
+        animate();
+
+        // 3. 平滑滚动导航
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                window.scrollTo({
+                    top: targetSection.offsetTop - 80, // 减去导航高度
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
