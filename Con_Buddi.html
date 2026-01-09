@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Self | A Comparative Study</title>
+    
+    <!-- Fonts: Playfair Display (Serif) & Inter (Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config for High-End Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#F9F7F1',
+                        'ink': '#1A1A1A',
+                        'gold': '#C1A260',
+                        'gold-light': '#E5D5B0',
+                        'soft-gray': '#F0EFEA'
+                    },
+                    fontFamily: {
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Inter"', 'sans-serif'],
+                    },
+                    spacing: {
+                        '128': '32rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Utilities for that "Magazine" feel */
+        body {
+            background-color: #F9F7F1;
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .drop-cap::first-letter {
+            float: left;
+            font-family: "Playfair Display", serif;
+            font-size: 5rem;
+            line-height: 4rem;
+            padding-right: 1rem;
+            color: #C1A260;
+        }
+
+        /* Minimalist Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F7F1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1D1;
+            border-radius: 3px;
+        }
+
+        /* Tooltip styling */
+        .tooltip {
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .data-point:hover .tooltip {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans font-light leading-relaxed">
+
+    <!-- Navigation (Sticky, Minimal) -->
+    <nav class="fixed top-0 w-full z-50 bg-paper/90 backdrop-blur-sm border-b border-gold/20 transition-all duration-500" id="navbar">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-serif text-xl tracking-wide font-semibold text-ink">PHILOSOPHIA</div>
+            <div class="hidden md:flex space-x-8 text-sm tracking-widest text-gray-500 uppercase">
+                <a href="#intro" class="hover:text-gold transition-colors">The Self</a>
+                <a href="#confucianism" class="hover:text-gold transition-colors">Confucianism</a>
+                <a href="#buddhism" class="hover:text-gold transition-colors">Buddhism</a>
+                <a href="#synthesis" class="hover:text-gold transition-colors">Synthesis</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-10">
+            <!-- Abstract SVG Background -->
+            <svg width="100%" height="100%" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="400" cy="400" r="300" stroke="#C1A260" stroke-width="0.5" fill="none" opacity="0.5"/>
+                <circle cx="400" cy="400" r="250" stroke="#1A1A1A" stroke-width="0.5" fill="none" opacity="0.3"/>
+                <circle cx="400" cy="400" r="200" stroke="#C1A260" stroke-width="0.5" fill="none" opacity="0.5"/>
+            </svg>
+        </div>
+
+        <div class="z-10 max-w-4xl fade-up visible">
+            <p class="text-gold tracking-[0.3em] uppercase text-xs md:text-sm mb-6">A Comparative Analysis</p>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-ink mb-8 leading-tight">
+                The Architecture <br/> <i class="font-serif italic text-gray-600">of the</i> Soul
+            </h1>
+            <div class="w-16 h-px bg-gold mx-auto mb-8"></div>
+            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+                Exploring the convergence of Confucian Virtue and Buddhist Wisdom in the practice of self-cultivation.
+            </p>
+        </div>
+        
+        <div class="absolute bottom-10 animate-bounce text-gray-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <!-- Introduction: What is Self-Cultivation -->
+    <section id="intro" class="py-24 md:py-32 max-w-4xl mx-auto px-6">
+        <div class="fade-up">
+            <h2 class="font-serif text-3xl md:text-4xl mb-12 text-ink">The Internal Gardener</h2>
+            <div class="grid md:grid-cols-2 gap-12 text-gray-700 text-justify">
+                <p class="drop-cap">
+                    What does self-cultivation mean? It is the profound capability to reflect upon and adjust one’s own psychology. It is the art of transforming raw experience into crystallized wisdom. To cultivate the self is to be both the architect and the inhabitant of your own mind.
+                </p>
+                <div class="relative pl-6 border-l border-gold/50">
+                    <p class="mb-4">It implies <span class="text-ink font-medium">Self-Liberation</span>: becoming one's own Bodhisattva to save oneself from anxiety and fear.</p>
+                    <p>It implies <span class="text-ink font-medium">Self-Education</span>: the duality of being the curious student and the patient teacher simultaneously.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Comparison Section -->
+    <section class="py-24 bg-soft-gray border-t border-gold/10" id="analysis">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 fade-up">
+                <div class="max-w-xl">
+                    <h2 class="font-serif text-4xl mb-4">Divergent Paths, Convergent Truths</h2>
+                    <p class="text-gray-600">Explore the distinct methodologies of the two traditions by interacting with the data points below.</p>
+                </div>
+                <!-- Legend -->
+                <div class="flex space-x-6 mt-6 md:mt-0 text-xs tracking-widest uppercase">
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-ink mr-2"></span> Confucianism</div>
+                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-gold mr-2"></span> Buddhism</div>
+                </div>
+            </div>
+
+            <!-- Custom "Nature Style" Conceptual Chart -->
+            <div class="relative h-96 w-full bg-paper border border-gray-200 rounded-sm p-8 fade-up overflow-hidden shadow-sm">
+                <!-- Grid Lines -->
+                <div class="absolute inset-0 grid grid-rows-4 w-full h-full pointer-events-none">
+                    <div class="border-b border-gray-100"></div>
+                    <div class="border-b border-gray-100"></div>
+                    <div class="border-b border-gray-100"></div>
+                </div>
+
+                <!-- Labels -->
+                <div class="absolute left-4 top-4 text-xs text-gray-400 uppercase tracking-widest">Internal Realm</div>
+                <div class="absolute right-4 bottom-4 text-xs text-gray-400 uppercase tracking-widest">External Practice</div>
+
+                <!-- SVG Curves -->
+                <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+                    <!-- Confucian Curve (Social/External to Internal) -->
+                    <path d="M 50 350 C 200 350, 400 200, 750 100" stroke="#1A1A1A" stroke-width="1.5" fill="none" class="draw-anim"/>
+                    <!-- Buddhist Curve (Internal/Void to Compassion) -->
+                    <path d="M 50 50 C 300 50, 400 250, 750 300" stroke="#C1A260" stroke-width="1.5" fill="none" stroke-dasharray="4 4" class="draw-anim"/>
+                </svg>
+
+                <!-- Interactive Points (Confucianism) -->
+                <div class="absolute top-[85%] left-[10%] data-point group">
+                    <div class="w-3 h-3 bg-ink rounded-full border-4 border-paper cursor-pointer shadow-lg transform transition hover:scale-150"></div>
+                    <div class="tooltip absolute bottom-6 left-0 w-64 bg-white border border-gray-200 p-4 shadow-xl z-10">
+                        <h4 class="font-serif font-semibold mb-1">Ren (Benevolence)</h4>
+                        <p class="text-xs text-gray-600">The foundation. Considering others to achieve oneself.</p>
+                    </div>
+                </div>
+
+                <div class="absolute top-[25%] left-[80%] data-point group">
+                    <div class="w-3 h-3 bg-ink rounded-full border-4 border-paper cursor-pointer shadow-lg transform transition hover:scale-150"></div>
+                    <div class="tooltip absolute top-6 right-0 w-64 bg-white border border-gray-200 p-4 shadow-xl z-10">
+                        <h4 class="font-serif font-semibold mb-1">Jingjie (Realm)</h4>
+                        <p class="text-xs text-gray-600">A higher resolution of understanding the world. Finding joy in the practice.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Points (Buddhism) -->
+                <div class="absolute top-[10%] left-[10%] data-point group">
+                    <div class="w-3 h-3 bg-gold rounded-full border-4 border-paper cursor-pointer shadow-lg transform transition hover:scale-150"></div>
+                    <div class="tooltip absolute top-6 left-0 w-64 bg-white border border-gray-200 p-4 shadow-xl z-10">
+                        <h4 class="font-serif font-semibold text-gold mb-1">Anatta (No-Self)</h4>
+                        <p class="text-xs text-gray-600">Realizing all phenomena are Maya (illusion). No self, no suffering.</p>
+                    </div>
+                </div>
+
+                <div class="absolute top-[80%] left-[80%] data-point group">
+                    <div class="w-3 h-3 bg-gold rounded-full border-4 border-paper cursor-pointer shadow-lg transform transition hover:scale-150"></div>
+                    <div class="tooltip absolute bottom-6 right-0 w-64 bg-white border border-gray-200 p-4 shadow-xl z-10">
+                        <h4 class="font-serif font-semibold text-gold mb-1">Compassion</h4>
+                        <p class="text-xs text-gray-600">Dwelling nowhere, yet generating the mind to save sentient beings.</p>
+                    </div>
+                </div>
+                
+                <!-- Center Convergence -->
+                <div class="absolute top-[48%] left-[48%] data-point group">
+                    <div class="w-4 h-4 bg-white border-2 border-gray-400 rounded-full cursor-pointer shadow-sm animate-pulse"></div>
+                    <div class="tooltip absolute top-8 left-1/2 transform -translate-x-1/2 w-48 text-center bg-ink text-white p-3 shadow-xl z-20">
+                        <p class="text-xs tracking-widest uppercase">Understanding</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Synthesis Section -->
+    <section id="synthesis" class="py-24 max-w-5xl mx-auto px-6">
+        <div class="grid md:grid-cols-12 gap-12 items-center fade-up">
+            <div class="md:col-span-4">
+                <h2 class="font-serif text-5xl text-gold opacity-30 mb-4">03</h2>
+                <h3 class="font-serif text-3xl text-ink">The Philosophy of Comparison</h3>
+            </div>
+            <div class="md:col-span-8 space-y-6 text-gray-700 leading-relaxed border-l border-gold/30 pl-8">
+                <p>
+                    A crude comparison sets these traditions as enemies: "Existence" versus "Emptiness." But a higher philosophy sees the thread that binds them.
+                </p>
+                <p>
+                    Both traditions posit that the ultimate goal of self-cultivation is <strong>Understanding</strong>. 
+                </p>
+                <div class="bg-white p-6 border border-gray-100 shadow-sm mt-6">
+                    <p class="font-serif italic text-lg text-ink">
+                        "Confucianism finds freedom in the joy of practice. Buddhism finds freedom in the wisdom of non-attachment."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer / Outro -->
+    <footer class="bg-ink text-paper py-24 text-center">
+        <div class="max-w-2xl mx-auto px-6 fade-up">
+            <div class="w-px h-16 bg-gold mx-auto mb-8"></div>
+            <h2 class="font-serif text-3xl md:text-4xl mb-6">One Mind, Two Gates</h2>
+            <p class="text-gray-400 font-light mb-12">
+                Whether you walk the path of the Junzi or the Bodhisattva, the destination is a mind that is sovereign, peaceful, and awake.
+            </p>
+            <div class="text-xs text-gold/50 uppercase tracking-[0.2em]">
+                Based on the essay "Self-Cultivation"
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for Interaction -->
+    <script>
+        // Intersection Observer for Fade-up Animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar Transition on Scroll
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-sm');
+                nav.classList.add('py-2');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('shadow-sm');
+                nav.classList.remove('py-2');
+                nav.classList.add('py-4');
+            }
+        });
+    </script>
+</body>
+</html>
